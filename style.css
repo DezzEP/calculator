@@ -36,7 +36,7 @@ button{
   border-radius: 30px;
   margin-bottom: 20px;
 }
-.screen-top{ 
+#screen-top{ 
   display: flex;
   justify-content: flex-end;
   margin-right: 20px;
@@ -44,11 +44,12 @@ button{
   
 
 }
-.screen-bottom{
+#screen-bottom{
   display: flex;
   justify-content: flex-end;
   margin-right: 20px;
   font-size:25px;
+  content:"";
 
 }
 .bigbuttons{
