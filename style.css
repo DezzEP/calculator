@@ -31,26 +31,39 @@ button{
   border-radius:12px;
 }
 .screen{
-  
+
   background-color: rgb(183, 176, 184);
   border-radius: 30px;
   margin-bottom: 20px;
+  min-height: 130px;
+  
 }
 #screen-top{ 
   display: flex;
   justify-content: flex-end;
   margin-right: 20px;
-  font-size: 14px;
+  font-size: 16px;
   
 
+}
+#screen-top p {
+  max-width:200px;
+  word-wrap:break-word;
 }
 #screen-bottom{
   display: flex;
   justify-content: flex-end;
+  flex-wrap:wrap;
+  
   margin-right: 20px;
   font-size:25px;
-  content:"";
-
+  
+  margin-left: 20px;
+}
+#screen-bottom p{
+  
+  max-width:200px;
+  word-wrap:break-word;
 }
 .bigbuttons{
   display:flex;
@@ -71,6 +84,8 @@ button{
   
   
 }
+
+
 .buttons{
   
   margin: 0 auto;

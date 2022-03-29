@@ -1,23 +1,21 @@
 let displayValue = '0';
 let displayValueOperator = '';
-let displayValue2 = '';
 let allowOperand = true;
-let x = 0; //these are declared and mutate for operate
-let y = 0;
+let allowEquals = true;
+let x = 0; 
+
+
 
 
 
 
 const add = (x, y) => x + y; 
-
 const subtract = (x, y) => x - y;
-
 const multiply = (x, y) => x * y;
-
 const divide = (x, y) => x / y;
-
 const operate = (operator, x, y) => {
-
+  x = parseInt(x);
+  y = parseInt(y);
   if (operator === ' + '){
     return add(x,y);
   }
@@ -32,7 +30,7 @@ const operate = (operator, x, y) => {
   }
   else if(operator === ' / '){
     if(x === 0 || y === 0){
-      return("This calculator does not understand infinity")}; 
+      return(": -------------This calculator does not understand infinity")}; 
     return divide(x,y);
 
   }
@@ -48,15 +46,14 @@ const displayUpdate = (numberClick) => {
   else if (displayValue == 0){ 
     bottomScreenUpdate(displayValue = numberClick);
   }
+  
   else{
     bottomScreenUpdate(displayValue += numberClick);
   } 
 
   
-  
-//Maybe I can turn this entire part into it's own function.
-//ex = displayValue can just be varX.. 
 function bottomScreenUpdate(valueButtonClick){
+  allowEquals = true;
   const updateBottom = document.getElementById("screen-bottom");
   const screenUpdate = document.createElement('p');
   const numberOnScreen = document.createTextNode(valueButtonClick);
@@ -72,10 +69,12 @@ function bottomScreenUpdate(valueButtonClick){
 }
 
 function topScreenUpdate(valueButtonClick){
+  
+  
   const updateTop = document.getElementById("screen-top");
   const screenUpdate = document.createElement('p');
   displayValueOperator = valueButtonClick;
-  const numberOnScreen = document.createTextNode(displayValue + displayValueOperator + displayValue2);
+  const numberOnScreen = document.createTextNode(displayValue + displayValueOperator);
   
   
   
@@ -117,15 +116,29 @@ document.getElementById('0').onclick = function(){
   displayUpdate('0');
   
 }
+document.getElementById('clear').onclick = function(){
+  
+  
+  displayValue = '';
+  displayValueOperator = '';
+  x = 0; 
+  displayUpdate('0');
+  allowOperand = true;
+  allowEquals = true;
+  topScreenUpdate('');
+  
+  
+
+
+}
 //checks to see if operand has been used yet
 function checkDisplayValue (value){ 
   if (!displayValueOperator){
      x = displayValue;
     displayUpdate(value)
     displayValue = 0;
-    console.log(x);
-    
-  }
+    }
+  
 }
 document.getElementById('add').onclick = function(){
   checkDisplayValue(' + ')
@@ -140,6 +153,29 @@ document.getElementById('multiply').onclick = function(){
 document.getElementById('divide').onclick = function(){
   checkDisplayValue(' / ')
 }
+
+document.getElementById('equals').onclick = function(){
+  if (allowEquals){
+    if(!displayValueOperator){
+      topScreenUpdate('');
+      
+      x = 0;
+      displayValue = 0;
+      displayUpdate('0');
+      
+    }
+    else{
+  let equalTo = operate(displayValueOperator, displayValue, x);
+  displayValue = 0;
+  x = 0;
+  topScreenUpdate(equalTo);
+  displayUpdate('0');
+  
+  displayValueOperator = '';
+  allowEquals = false;
+  
+}}}
+  
   
 
 
