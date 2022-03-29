@@ -1,4 +1,11 @@
 let displayValue = '0';
+let displayValueOperator = '';
+let displayValue2 = '';
+let allowOperand = true;
+let x = 0; //these are declared and mutate for operate
+let y = 0;
+
+
 
 
 const add = (x, y) => x + y; 
@@ -11,19 +18,19 @@ const divide = (x, y) => x / y;
 
 const operate = (operator, x, y) => {
 
-  if (operator === 'add'){
+  if (operator === ' + '){
     return add(x,y);
   }
-  else if(operator === 'subtract'){
+  else if(operator === ' - '){
     
     
     return subtract(x,y);
     
   }
-  else if(operator === 'multiply'){
+  else if(operator === ' * '){
     return multiply(x,y);
   }
-  else if(operator === 'divide'){
+  else if(operator === ' / '){
     if(x === 0 || y === 0){
       return("This calculator does not understand infinity")}; 
     return divide(x,y);
@@ -31,18 +38,28 @@ const operate = (operator, x, y) => {
   }
 }
 const displayUpdate = (numberClick) => {
-  
-  if (displayValue == 0){
-    displayValue = numberClick;
+  //checks to see if operator was selected
+  if(numberClick === ' + ' || numberClick === ' - ' || 
+    numberClick === ' / ' || numberClick === ' * '){
+    topScreenUpdate(numberClick)
+
+  }
+  //stops calculator from display 0000000 if constantly selected.
+  else if (displayValue == 0){ 
+    bottomScreenUpdate(displayValue = numberClick);
   }
   else{
-    displayValue += numberClick;
+    bottomScreenUpdate(displayValue += numberClick);
   } 
+
   
   
+//Maybe I can turn this entire part into it's own function.
+//ex = displayValue can just be varX.. 
+function bottomScreenUpdate(valueButtonClick){
   const updateBottom = document.getElementById("screen-bottom");
   const screenUpdate = document.createElement('p');
-  const numberOnScreen = document.createTextNode(displayValue);
+  const numberOnScreen = document.createTextNode(valueButtonClick);
 
   if (updateBottom.hasChildNodes()){ // removes the old number for new number.
     updateBottom.removeChild(updateBottom.children[0]);
@@ -51,10 +68,22 @@ const displayUpdate = (numberClick) => {
   
   screenUpdate.appendChild(numberOnScreen);
   updateBottom.appendChild(screenUpdate);
+}
+}
 
+function topScreenUpdate(valueButtonClick){
+  const updateTop = document.getElementById("screen-top");
+  const screenUpdate = document.createElement('p');
+  displayValueOperator = valueButtonClick;
+  const numberOnScreen = document.createTextNode(displayValue + displayValueOperator + displayValue2);
   
-
   
+  
+  if (updateTop.hasChildNodes()){
+    updateTop.removeChild(updateTop.children[0]);
+  }
+  screenUpdate.appendChild(numberOnScreen);
+  updateTop.appendChild(screenUpdate);
 }
 
 document.getElementById('1').onclick = function(){
@@ -88,3 +117,29 @@ document.getElementById('0').onclick = function(){
   displayUpdate('0');
   
 }
+//checks to see if operand has been used yet
+function checkDisplayValue (value){ 
+  if (!displayValueOperator){
+     x = displayValue;
+    displayUpdate(value)
+    displayValue = 0;
+    console.log(x);
+    
+  }
+}
+document.getElementById('add').onclick = function(){
+  checkDisplayValue(' + ')
+    }
+
+document.getElementById('subtract').onclick = function(){
+  checkDisplayValue(' - ')
+}
+document.getElementById('multiply').onclick = function(){
+  checkDisplayValue(' * ')
+}
+document.getElementById('divide').onclick = function(){
+  checkDisplayValue(' / ')
+}
+  
+
+
