@@ -1,181 +1,135 @@
-let displayValue = '0';
-let displayValueOperator = '';
-let allowOperand = true;
-let allowEquals = true;
-let x = 0; 
+//Can still add decimal point and rounding
 
+let storedOperator = '';
+let displayValue = '';
+let numberOne = 0;
+let numberTwo = 0;
+const numberedButtons = ['1', '2', '3', '4', 
+'5', '6', '7', '8', '9', '0'];
+const operators = ['/', '*', 
+'-', '+', '='];
 
+const add = (x, y)  => (x + y) ; 
+const subtract = (x , y) => x - y;
+const multiply = (x , y) => x * y;
+const divide = (x , y) => x / y;
 
-
-
-
-const add = (x, y) => x + y; 
-const subtract = (x, y) => x - y;
-const multiply = (x, y) => x * y;
-const divide = (x, y) => x / y;
-const operate = (operator, x, y) => {
-  x = parseInt(x);
-  y = parseInt(y);
-  if (operator === ' + '){
-    return add(x,y);
-  }
-  else if(operator === ' - '){
-    
-    
-    return subtract(x,y);
+//Number presses stored in displayValue, 
+const pressNumber = (event) =>{
+  
+  if (numberedButtons.includes(event.target.id)){
+    displayValue += event.target.id;
+    bottomScreenUpdate(displayValue);             // Populates bottom of calculator screen.
     
   }
-  else if(operator === ' * '){
-    return multiply(x,y);
+}
+const clearCalculator = (event) => {
+  if (event.target.id === 'clear'){             // Resets everything on the calculator to default status
+    storedOperator = '';
+    displayValue = '';
+    numberOne = 0;
+    numberTwo = 0;
+    bottomScreenUpdate(displayValue);
+    topScreenUpdate('Calculate Me');
   }
-  else if(operator === ' / '){
-    if(x === 0 || y === 0){
-      return(": -------------This calculator does not understand infinity")}; 
-    return divide(x,y);
-
+}
+const backSpace = (event) => {
+  if (event.target.id === 'delete' && displayValue != ''){
+    displayValue = displayValue.slice(0, -1);
+    bottomScreenUpdate(displayValue);
   }
 }
-const displayUpdate = (numberClick) => {
-  //checks to see if operator was selected
-  if(numberClick === ' + ' || numberClick === ' - ' || 
-    numberClick === ' / ' || numberClick === ' * '){
-    topScreenUpdate(numberClick)
-
-  }
-  //stops calculator from display 0000000 if constantly selected.
-  else if (displayValue == 0){ 
-    bottomScreenUpdate(displayValue = numberClick);
-  }
-  
-  else{
-    bottomScreenUpdate(displayValue += numberClick);
-  } 
-
-  
-function bottomScreenUpdate(valueButtonClick){
-  allowEquals = true;
-  const updateBottom = document.getElementById("screen-bottom");
-  const screenUpdate = document.createElement('p');
-  const numberOnScreen = document.createTextNode(valueButtonClick);
-
-  if (updateBottom.hasChildNodes()){ // removes the old number for new number.
-    updateBottom.removeChild(updateBottom.children[0]);
-  }
-  
-  
-  screenUpdate.appendChild(numberOnScreen);
-  updateBottom.appendChild(screenUpdate);
-}
-}
-
-function topScreenUpdate(valueButtonClick){
-  
-  
-  const updateTop = document.getElementById("screen-top");
-  const screenUpdate = document.createElement('p');
-  displayValueOperator = valueButtonClick;
-  const numberOnScreen = document.createTextNode(displayValue + displayValueOperator);
-  
-  
-  
-  if (updateTop.hasChildNodes()){
-    updateTop.removeChild(updateTop.children[0]);
-  }
-  screenUpdate.appendChild(numberOnScreen);
-  updateTop.appendChild(screenUpdate);
-}
-
-document.getElementById('1').onclick = function(){
-  displayUpdate('1')
-}
-document.getElementById('2').onclick = function(){
-  displayUpdate('2')
-}
-document.getElementById('3').onclick = function(){
-  displayUpdate('3')
-}
-document.getElementById('4').onclick = function(){
-  displayUpdate('4')
-}
-document.getElementById('5').onclick = function(){
-  displayUpdate('5')
-}
-document.getElementById('6').onclick = function(){
-  displayUpdate('6')
-}
-document.getElementById('7').onclick = function(){
-  displayUpdate('7')
-}
-document.getElementById('8').onclick = function(){
-  displayUpdate('8')
-}
-document.getElementById('9').onclick = function(){
-  displayUpdate('9');
-}
-document.getElementById('0').onclick = function(){
-  displayUpdate('0');
-  
-}
-document.getElementById('clear').onclick = function(){
-  
-  
-  displayValue = '';
-  displayValueOperator = '';
-  x = 0; 
-  displayUpdate('0');
-  allowOperand = true;
-  allowEquals = true;
-  topScreenUpdate('');
-  
-  
 
 
-}
-//checks to see if operand has been used yet
-function checkDisplayValue (value){ 
-  if (!displayValueOperator){
-     x = displayValue;
-    displayUpdate(value)
-    displayValue = 0;
+//checks to see  if an operator is pressed.
+
+const pressOperator = (event) =>{
+  
+  if (operators.includes(event.target.id)){
+    
+    if (displayValue != '' && displayValue != '-' && numberOne === 0){  // first number
+      numberOne = parseInt(displayValue);
+      displayValue = '';
+      if (event.target.id != '='){storedOperator = event.target.id;
+      topScreenUpdate(numberOne)}
+      else if(event.target.id === '='){   // display first number on top of calculator, 
+          topScreenUpdate(numberOne);
+          numberOne = 0;
+          bottomScreenUpdate(displayValue);   //remove data from bottom of display.
+      }
     }
-  
-}
-document.getElementById('add').onclick = function(){
-  checkDisplayValue(' + ')
-    }
-
-document.getElementById('subtract').onclick = function(){
-  checkDisplayValue(' - ')
-}
-document.getElementById('multiply').onclick = function(){
-  checkDisplayValue(' * ')
-}
-document.getElementById('divide').onclick = function(){
-  checkDisplayValue(' / ')
-}
-
-document.getElementById('equals').onclick = function(){
-  if (allowEquals){
-    if(!displayValueOperator){
-      topScreenUpdate('');
-      
-      x = 0;
-      displayValue = 0;
-      displayUpdate('0');
+    
+    else if(displayValue ==='' || displayValue ==='-'){          //checks if operator being changed before second number input.
+      if (numberOne === 0 && event.target.id === '-') { 
+        displayValue = "-";}                                     // ---------
+      else if(numberOne === 0 && event.target.id !='-'){      // Allows negative for first number.
+        displayValue  = "";                                     // ---------
+      }                
+      if (event.target.id != '='){storedOperator = event.target.id;}   
+      topScreenUpdate(numberOne);
       
     }
-    else{
-  let equalTo = operate(displayValueOperator, displayValue, x);
-  displayValue = 0;
-  x = 0;
-  topScreenUpdate(equalTo);
-  displayUpdate('0');
-  
-  displayValueOperator = '';
-  allowEquals = false;
-  
-}}}
-  
-  
+    else if (displayValue != ''){                   // when a new operator is pressed after numbertwo is being written,
+      numberTwo = parseInt(displayValue);           // does the previous operators equation
+      displayValue = '';
+      if(storedOperator === '+'){ // calls for addition               ALTERS numberONE TO SUM --------->
+        numberOne = add(numberOne,numberTwo);
+        storedOperator = event.target.id;
+      }
+      else if(storedOperator ==='-'){ //calls for subtraction
+        numberOne = subtract(numberOne,numberTwo);
+        storedOperator = event.target.id;
+      }
+      else if(storedOperator === '*'){ //calls for multiplication
+        numberOne = multiply(numberOne, numberTwo)
+        storedOperator = event.target.id;
+      }
+      else if(storedOperator === '/'){ // calls for division                <-------------
+        numberOne = divide(numberOne, numberTwo);
+        storedOperator = event.target.id;  
+    }
+      if(event.target.id === '='){              
+        storedOperator = '';
+        topScreenUpdate(numberOne);
+        displayValue = '';
+        bottomScreenUpdate(displayValue);
+        numberOne = 0;
+        numberTwo = 0;
+      }
+      else{
+      topScreenUpdate(numberOne);
+      displayValue  = "";  
+      bottomScreenUpdate(displayValue);  
+    }}
+  }
+}
+
+const bottomScreenUpdate = (numberClicked) =>  { // updates the bottom screen based on buttons pressed.
+
+  const bottomElement = document.getElementById("screen-bottom");
+  const createPara = document.createElement('p');
+  let numberEntered = document.createTextNode(numberClicked) 
+  if (bottomElement.hasChildNodes()){
+    bottomElement.removeChild(bottomElement.children[0]);
+  }
+  createPara.appendChild(numberEntered);
+  bottomElement.appendChild(createPara);
+}
+
+const topScreenUpdate = (numberSent) => {
+  const topElement = document.getElementById("screen-top");
+  const createPara = document.createElement('p');
+  let numberEntered = document.createTextNode(numberSent + ' ' + storedOperator);
+  if (topElement.hasChildNodes()){
+    topElement.removeChild(topElement.children[0]);
+  }
+  createPara.appendChild(numberEntered);
+  topElement.appendChild(createPara);
+}
+
+window.addEventListener('click', pressNumber);
+window.addEventListener('click', pressOperator);
+window.addEventListener('click', clearCalculator);
+window.addEventListener('click', backSpace);
 
 
