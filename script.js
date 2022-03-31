@@ -1,5 +1,4 @@
-//Can still add decimal point and rounding
-
+//Add a decimal point in the future and .. Probably refactor code once again :)
 let storedOperator = '';
 let displayValue = '';
 let numberOne = 0;
@@ -9,10 +8,18 @@ const numberedButtons = ['1', '2', '3', '4',
 const operators = ['/', '*', 
 '-', '+', '='];
 
-const add = (x, y)  => (x + y) ; 
-const subtract = (x , y) => x - y;
-const multiply = (x , y) => x * y;
-const divide = (x , y) => x / y;
+const add = (x, y)  => roundNumber(x + y) ; 
+const subtract = (x , y) => roundNumber(x - y);
+const multiply = (x , y) => roundNumber(x * y);
+const divide = (x , y) => roundNumber(x / y);
+  
+  
+
+function roundNumber(numb){
+  numb = Math.round((numb + Number.EPSILON) * 100) / 100;     // This will come especially useful once adding decimal point to the calculator.
+  return numb;
+
+}
 
 //Number presses stored in displayValue, 
 const pressNumber = (event) =>{
@@ -85,8 +92,12 @@ const pressOperator = (event) =>{
         storedOperator = event.target.id;
       }
       else if(storedOperator === '/'){ // calls for division                <-------------
+        if(numberOne == 0 || numberTwo == 0){
+          numberOne = 'You Cannot Divide By Zero It Scares Me';
+        }
+        else{
         numberOne = divide(numberOne, numberTwo);
-        storedOperator = event.target.id;  
+        storedOperator = event.target.id;  }
     }
       if(event.target.id === '='){              
         storedOperator = '';
@@ -103,9 +114,7 @@ const pressOperator = (event) =>{
     }}
   }
 }
-
 const bottomScreenUpdate = (numberClicked) =>  { // updates the bottom screen based on buttons pressed.
-
   const bottomElement = document.getElementById("screen-bottom");
   const createPara = document.createElement('p');
   let numberEntered = document.createTextNode(numberClicked) 
@@ -115,7 +124,6 @@ const bottomScreenUpdate = (numberClicked) =>  { // updates the bottom screen ba
   createPara.appendChild(numberEntered);
   bottomElement.appendChild(createPara);
 }
-
 const topScreenUpdate = (numberSent) => {
   const topElement = document.getElementById("screen-top");
   const createPara = document.createElement('p');
@@ -126,7 +134,6 @@ const topScreenUpdate = (numberSent) => {
   createPara.appendChild(numberEntered);
   topElement.appendChild(createPara);
 }
-
 window.addEventListener('click', pressNumber);
 window.addEventListener('click', pressOperator);
 window.addEventListener('click', clearCalculator);
